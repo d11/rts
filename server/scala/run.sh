@@ -1,0 +1,1 @@
+scala -classpath build Main

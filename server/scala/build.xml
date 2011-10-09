@@ -1,0 +1,72 @@
+<project name="RTS" default="dist" basedir=".">
+   <description>Build the RTS project</description>
+
+   <property name="jarname" value="bin/rts-${DSTAMP}.jar" />
+
+   <property name="scala.home" value="/usr/share/scala" />
+
+   <property name="base.dir" value="." />
+   <property name="lib.dir" value="../lib/jvm" />
+
+   <property name="slf4s.dir" value="${lib.dir}/slf4s/" />
+   <property name="log4j.jar" value="${lib.dir}/log4j/log4j.jar" />
+   <property name="slf4j.jar" value="${lib.dir}/slf4j/slf4j-log4j12.jar" />
+   <property name="slf4j-api.jar" value="${lib.dir}/slf4j/slf4j-api.jar" />
+   <property name="scala-library.jar" value="${lib.dir}/scala/scala-library.jar" />
+   <property name="jython.jar" value="${lib.dir}/jython/jython.jar" />
+
+   <property name="src.dir" value="${base.dir}/src" />
+   <property name="build.dir" value="${base.dir}/build" />
+
+   <path id="build.classpath">
+      <pathelement location="${scala-library.jar}" />
+      <pathelement location="${jython.jar}" />
+      <pathelement location="${log4j.jar}" />
+      <pathelement location="${slf4j.jar}" />
+      <pathelement location="${slf4j-api.jar}" />
+      <pathelement location="${slf4s.dir}" />
+      <pathelement location="${build.dir}" />
+   </path>
+   <target name="init">
+      <tstamp/>
+      <taskdef resource="scala/tools/ant/antlib.xml">
+         <classpath>
+            <pathelement location="${scala.home}/lib/scala-compiler.jar"   />
+            <pathelement location="${scala-library.jar}"   />
+         </classpath>
+      </taskdef>
+   </target>
+
+   <target name="compile" depends="init" description="compile the source " >
+      <mkdir dir="${build.dir}"/>
+
+      <scalac srcdir="${src.dir}" destdir="${build.dir}" classpathref="build.classpath" force="changed">
+         <include name="**/*.scala"/>
+      </scalac>
+   </target>
+
+   <target name="dist" depends="compile" description="generate the distribution" >
+      <mkdir dir="bin"/>
+
+      <manifestclasspath property="jar.classpath" jarfile="${jarname}">
+         <classpath refid="build.classpath"/>
+      </manifestclasspath>        
+
+      <jar jarfile="bin/rts-${DSTAMP}.jar" basedir="${build.dir}">
+         <manifest>
+            <attribute name="Built-By" value="${user.name}"/>
+            <attribute name="Main-Class" value="Main"/>
+            <attribute name="Class-Path" value="${jar.classpath}"/>
+         </manifest>
+      </jar>
+
+   </target>
+
+   <target name="clean" description="clean up" >
+      <delete dir="${build.dir}"/>
+      <delete dir="bin"/>
+   </target>
+</project>
+
+
+
