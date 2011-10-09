@@ -7,20 +7,11 @@ import java.net.ServerSocket
 import java.net.Socket
 import java.io.IOException
 import com.weiglewilczek.slf4s._
-//import org.apache.log4j.Logger;
-//import org.slf4j.Logger
-//import org.slf4j.LoggerFactory
-
-/*
-trait LogHelper {
-    val loggerName = this.getClass.getName
-    //lazy val logger = Logger.getLogger(loggerName)
-    lazy val logger = LoggerFactory.getLogger(getClass)
-}*/
 
 class PlayerCreator( port: Int ) extends Actor with Logging {
 
-  implicit def showSocket(socket: Socket) = {  socket.getInetAddress().getHostAddress }
+  implicit def showSocket(socket: Socket) = { socket.getInetAddress().getHostAddress }
+
   def act() {
     try {
       val serverSocket = new ServerSocket( port );
